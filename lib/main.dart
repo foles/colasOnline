@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:colasOnline/pages/home.dart';
 import 'package:colasOnline/pages/signIn.dart';
 import 'package:colasOnline/services/authentication_service.dart';
@@ -43,7 +44,24 @@ class AuthentificationWrapper extends StatelessWidget {
     final firebaseUser = context.watch<User>();
 
     if (firebaseUser != null) {
-      return HomePage();
+      return StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(firebaseUser.uid)
+            .snapshots(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error ${snapshot.error}');
+          } else if (snapshot.data['role'] == "admin") {
+            return HomePage();
+          } else if (snapshot.data['role'] == "user") {
+            return Text("data");
+          } else {
+            return CircularProgressIndicator();
+          }
+        },
+      );
     }
     return SignInPage();
   }
