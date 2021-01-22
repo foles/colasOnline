@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "496915281726",
+    "project_id": "colasonline-f46c0",
+    "storage_bucket": "colasonline-f46c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:496915281726:android:f813460ba686d4a7185e6f",
+        "android_client_info": {
+          "package_name": "com.example.colasOnline"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "496915281726-o4bknepl335j7l77piji355ubtp53lns.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6QvzcWiKEBn1po5bC5XhvO50oE3rFrEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "496915281726-o4bknepl335j7l77piji355ubtp53lns.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
