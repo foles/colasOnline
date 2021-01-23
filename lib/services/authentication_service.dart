@@ -30,5 +30,6 @@ class AuthenticationService {
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
+    
   }
 }

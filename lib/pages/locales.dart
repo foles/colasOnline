@@ -1,23 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:colasOnline/widgets/localWidget.dart';
 import 'package:colasOnline/widgets/menuLateral.dart';
+import 'package:dotted_border/dotted_border.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LocalesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Lista de Locales"),
+        title: Text("Locales "),
       ),
       drawer: MenuLateral(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("locales"),
-          ],
-        ),
-      ),
+      body: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance.collection('locales').snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) return new Text("There is no expense");
+            return new ListView(children: getExpenseItems(snapshot));
+          }),
     );
+  }
+
+  getExpenseItems(AsyncSnapshot<QuerySnapshot> snapshot) {
+    return snapshot.data.docs
+        .map((doc) => LocalWidget(doc["nombre"], doc["direccion"],
+            doc["horario"], doc["tipo"], doc["estado"]))
+        .toList();
   }
 }
