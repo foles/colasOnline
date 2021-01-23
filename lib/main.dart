@@ -53,10 +53,8 @@ class AuthentificationWrapper extends StatelessWidget {
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text('Error ${snapshot.error}');
-          } else if (snapshot.data['role'] == "admin") {
+          } else if (snapshot.hasData) {
             return HomePage();
-          } else if (snapshot.data['role'] == "user") {
-            return Text("data");
           } else {
             return CircularProgressIndicator();
           }

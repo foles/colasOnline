@@ -33,6 +33,8 @@ dependencies:
   firebase_core: "0.7.0"
   cloud_firestore: ^0.16.0
   provider: ^4.3.3
+  dotted_border: ^1.0.7
+
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +54,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/queue.png
+    - assets/store.png
+
 
   #   - images/a_dot_ham.jpeg
 
