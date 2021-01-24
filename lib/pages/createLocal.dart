@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:colasOnline/pages/admin.dart';
 import 'package:colasOnline/widgets/menuLateral.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -80,6 +81,12 @@ class CreateLocal extends StatelessWidget {
                     onPressed: () {
                       addLocal(nombreC.text.trim(), horarioC.text.trim(),
                           firebaseUser.uid);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AdminPage(),
+                        ),
+                      );
                     },
                     child: Text(
                       'Registrar Local',
@@ -96,9 +103,13 @@ class CreateLocal extends StatelessWidget {
 
 addLocal(String nombre, String horario, String uid) {
   Map<String, dynamic> demoData = {
+    "id": "docRef.$uid",
     "nombre": "$nombre",
     "horario": "$horario",
     "uid": "$uid",
+    "tipo": "asd",
+    "estado": true,
+    "direccion": "asdds"
   };
 
   CollectionReference cr = FirebaseFirestore.instance.collection('locales');

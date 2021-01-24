@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:colasOnline/widgets/localWidget.dart';
 import 'package:colasOnline/widgets/menuLateral.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:barcode_scan/barcode_scan.dart';
 
 class LocalesPage extends StatelessWidget {
   @override
@@ -16,20 +17,73 @@ class LocalesPage extends StatelessWidget {
         title: Text("Locales "),
       ),
       drawer: MenuLateral(),
-      body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('locales').snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) return new Text("There is no expense");
-            return new ListView(children: getExpenseItems(snapshot));
-          }),
+      body: Column(
+        children: [
+          StreamBuilder<QuerySnapshot>(
+              stream:
+                  FirebaseFirestore.instance.collection('locales').snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) return new Text("There is no expense");
+                return new Column(children: getLocales(snapshot));
+              })
+        ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        icon: Icon(Icons.camera_alt),
+        label: Text("Scan"),
+        onPressed: () {
+          _scanQR(firebaseUser.uid, context);
+        },
+      ),
     );
   }
 
-  getExpenseItems(AsyncSnapshot<QuerySnapshot> snapshot) {
+  getLocales(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data.docs
         .map((doc) => LocalWidget(doc["nombre"], doc["direccion"],
             doc["horario"], doc["tipo"], doc["estado"]))
         .toList();
   }
+
+  Future _scanQR(String uid, BuildContext context) async {
+    try {
+      String qrResult = await BarcodeScanner.scan();
+      scanQr(qrResult, uid, context);
+      print(qrResult + "<-----------------");
+    } catch (ex) {
+      print(ex);
+    }
+  }
+}
+
+scanQr(String qr, String uid, BuildContext context) {
+  FirebaseFirestore.instance
+      .collection('locales')
+      .doc(qr)
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      print(documentSnapshot["nombre"]);
+      addCola(qr, uid, context);
+    } else {
+      print(qr + "no exite----------------------------");
+      Fluttertoast.showToast(
+          msg: "El Código QR no es valido",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  });
+}
+
+addCola(String localId, String uid, BuildContext context) {
+  FirebaseFirestore.instance.collection('colas').add({
+    "localId": localId,
+    "uid": uid,
+    "date": DateTime.now(),
+  }).then((value) {});
 }

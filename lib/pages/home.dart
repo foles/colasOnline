@@ -17,9 +17,7 @@ class HomePage extends StatelessWidget {
           children: [
             Text("HOME"),
             RaisedButton(
-              onPressed: () {
-                context.read<AuthenticationService>().signOut();
-              },
+              onPressed: () {},
               child: Text("Sign out"),
             ),
           ],

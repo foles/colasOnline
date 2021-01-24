@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:colasOnline/pages/home.dart';
+import 'package:colasOnline/pages/locales.dart';
 import 'package:colasOnline/pages/signIn.dart';
 import 'package:colasOnline/services/authentication_service.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +54,7 @@ class AuthentificationWrapper extends StatelessWidget {
           if (snapshot.hasError) {
             return Text('Error ${snapshot.error}');
           } else if (snapshot.hasData) {
-            return HomePage();
+            return LocalesPage();
           } else {
             return CircularProgressIndicator();
           }
