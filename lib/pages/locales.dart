@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:colasOnline/pages/queue.dart';
 import 'package:colasOnline/widgets/localWidget.dart';
 import 'package:colasOnline/widgets/menuLateral.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -81,9 +82,37 @@ scanQr(String qr, String uid, BuildContext context) {
 }
 
 addCola(String localId, String uid, BuildContext context) {
-  FirebaseFirestore.instance.collection('colas').add({
-    "localId": localId,
-    "uid": uid,
-    "date": DateTime.now(),
-  }).then((value) {});
+  FirebaseFirestore.instance
+      .collection('colas')
+      .where('uid', isEqualTo: uid)
+      .get()
+      .then((QuerySnapshot qs) => {
+            if (qs.docs.length > 0)
+              {
+                Fluttertoast.showToast(
+                    msg: "Ya se encuentra en una Cola",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0)
+              }
+            else
+              {
+                FirebaseFirestore.instance.collection('colas').add({
+                  "localId": localId,
+                  "uid": uid,
+                  "date": DateTime.now(),
+                  "estado": false
+                }).then((value) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Queue(),
+                    ),
+                  );
+                })
+              }
+          });
 }

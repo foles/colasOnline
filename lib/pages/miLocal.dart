@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:colasOnline/pages/admCola.dart';
 import 'package:colasOnline/widgets/localWidget.dart';
 import 'package:colasOnline/widgets/menuLateral.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -44,7 +45,22 @@ class MiLocal extends StatelessWidget {
                 margin: EdgeInsets.only(top: 10),
                 child: RaisedButton(
                     color: Colors.blue,
-                    onPressed: () {},
+                    onPressed: () {
+                      FirebaseFirestore.instance
+                          .collection('locales')
+                          .where('uid', isEqualTo: firebaseUser.uid)
+                          .get()
+                          .then((QuerySnapshot qs) => {
+                                qs.docs.forEach((element) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            AdmCola(element.id)),
+                                  );
+                                })
+                              });
+                    },
                     child: Text(
                       'Administrar Cola',
                       style: TextStyle(color: Colors.white, fontSize: 17),

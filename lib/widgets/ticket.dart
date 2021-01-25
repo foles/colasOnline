@@ -2,9 +2,10 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
 class Ticket extends StatelessWidget {
-  String nombre, id, horario, estado;
+  String id, you;
+  bool estado;
   Color colorTicket;
-  Ticket(this.nombre, this.id, this.horario, this.estado, this.colorTicket);
+  Ticket(this.id, this.estado, this.colorTicket, this.you);
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +13,8 @@ class Ticket extends StatelessWidget {
       margin: const EdgeInsets.only(top: 20.0),
       child: Center(
           child: DottedBorder(
-        color: Colors.white70,
-        dashPattern: [8, 4],
+        color: colorTicket,
+        dashPattern: [80, 4],
         strokeWidth: 2,
         strokeCap: StrokeCap.round,
         borderType: BorderType.RRect,
@@ -24,14 +25,10 @@ class Ticket extends StatelessWidget {
           child: Stack(
             children: [
               Positioned(
-                top: 5,
-                left: 5,
-                child: Text(
-                  nombre,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 15),
+                child: Icon(
+                  Icons.account_circle_outlined,
+                  color: Colors.white,
+                  size: 50.0,
                 ),
               ),
               Positioned(
@@ -47,20 +44,28 @@ class Ticket extends StatelessWidget {
               ),
               Positioned(
                 bottom: 5,
-                left: 5,
-                child: Text(
-                  'Horario: $horario',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 15),
-                ),
+                right: 5,
+                child: estado
+                    ? Text(
+                        "Atendiendo",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 15),
+                      )
+                    : Text(
+                        "Espera",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 15),
+                      ),
               ),
               Positioned(
                 bottom: 5,
-                right: 5,
+                left: 80,
                 child: Text(
-                  estado,
+                  you,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -70,9 +75,8 @@ class Ticket extends StatelessWidget {
             ],
           ),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: colorTicket,
-          ),
+              borderRadius: BorderRadius.circular(10),
+              color: estado ? Colors.teal[400] : colorTicket),
         ),
       )),
     );

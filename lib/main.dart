@@ -44,22 +44,7 @@ class AuthentificationWrapper extends StatelessWidget {
     final firebaseUser = context.watch<User>();
 
     if (firebaseUser != null) {
-      return StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('users')
-            .doc(firebaseUser.uid)
-            .snapshots(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error ${snapshot.error}');
-          } else if (snapshot.hasData) {
-            return LocalesPage();
-          } else {
-            return CircularProgressIndicator();
-          }
-        },
-      );
+      return LocalesPage();
     }
     return SignInPage();
   }

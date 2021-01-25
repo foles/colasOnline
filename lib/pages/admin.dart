@@ -33,10 +33,19 @@ class AdminPage extends StatelessWidget {
           MaterialPageRoute(builder: (context) => MiLocal()),
         );
       } else {
-        Navigator.push(
-          c,
-          MaterialPageRoute(builder: (context) => CreateLocal()),
-        );
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .get()
+            .then((DocumentSnapshot doc) => {
+                  if (doc['role'] == 'admin')
+                    {
+                      Navigator.push(
+                        c,
+                        MaterialPageRoute(builder: (context) => CreateLocal()),
+                      )
+                    }
+                });
       }
     });
   }

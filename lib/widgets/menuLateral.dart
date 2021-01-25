@@ -24,6 +24,7 @@ class MenuLateral extends StatelessWidget {
         children: <Widget>[
           new UserAccountsDrawerHeader(
             accountName: Text("Bienvenido"),
+            accountEmail: Text(firebaseUser.email),
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: NetworkImage(

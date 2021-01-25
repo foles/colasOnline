@@ -21,42 +21,62 @@ class Queue extends StatelessWidget {
                 stream: FirebaseFirestore.instance
                     .collection('colas')
                     .where('uid', isEqualTo: firebaseUser.uid)
+                    // .orderBy('date', descending: false)
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData) return new Text("There is no expense");
-                  return colas();
+                  if (!snapshot.hasData) {
+                    return new Text("There is no expense");
+                  } else {
+                    return new Column(
+                        children: getColas(snapshot, firebaseUser.uid));
+                  }
                 }),
           ],
         ));
   }
 
-  Column colas() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          '\n\nHorario promedio de atención 30 min ',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-        ),
-        Ticket("Juan Mendoza", "123123", "14:30 - 15:00", "Atendiendo",
-            Colors.blue[400]),
-        Ticket("Juan Perez", "789456", "15:00 - 15:30", "En Espera",
-            Colors.indigoAccent[400]),
-        Ticket("Anibal Gonzales", "789456", "15:30 - 16:00", "En Espera",
-            Colors.indigoAccent[400]),
-        Ticket("Pedro Tarifa", "789456", "16:00 - 16:30", "En Espera",
-            Colors.indigoAccent[400]),
-        Ticket("Fatima Lopez", "789456", "16:30 - 17:00", "En Espera",
-            Colors.indigoAccent[400]),
-        Ticket("Maria Ortiz", "789456", "17:00 - 17:30", "En Espera",
-            Colors.indigoAccent[400]),
-        Ticket("Jamil Silva", "789456", "18:00 - 18:30", "En Espera",
-            Colors.green),
-        Ticket("Zoe Condori", "789456", "19:00 - 20:00", "En Espera",
-            Colors.indigoAccent[400]),
-      ],
-    );
+  getColas(AsyncSnapshot<QuerySnapshot> snapshot, String uid) {
+    if (snapshot.data.docs.length > 0) {
+      return snapshot.data.docs
+          .map(
+            (doc) => StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('colas')
+                    .orderBy('date', descending: false)
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return new Text("There is no expense");
+                  } else {
+                    return new Column(
+                        children: getColasWidget(
+                            snapshot, uid, snapshot.data.docs[0]['localId']));
+                  }
+                }),
+          )
+          .toList();
+    } else {
+      return [1]
+          .map(
+            (doc) => Text(
+              "Aun no estas en alguna Cola Online",
+              style: TextStyle(height: 20, fontSize: 20),
+            ),
+          )
+          .toList();
+    }
+  }
+
+  getColasWidget(
+      AsyncSnapshot<QuerySnapshot> snapshot, String uid, String idLocal) {
+    return snapshot.data.docs
+        .map((doc) => (idLocal == doc['localId'])
+            ? (uid == doc['uid'])
+                ? Ticket(doc.id, doc["estado"], Colors.green[400], "you")
+                : Ticket(doc.id, doc["estado"], Colors.blue[400], "")
+            : SizedBox.shrink())
+        .toList();
   }
 }
