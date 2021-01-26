@@ -43,7 +43,7 @@ class LocalesPage extends StatelessWidget {
   getLocales(AsyncSnapshot<QuerySnapshot> snapshot) {
     return snapshot.data.docs
         .map((doc) => LocalWidget(doc["nombre"], doc["direccion"],
-            doc["horario"], doc["tipo"], doc["estado"]))
+            doc["tiempoAtencion"], doc["tipo"], doc["estado"]))
         .toList();
   }
 

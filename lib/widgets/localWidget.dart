@@ -2,10 +2,11 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
 class LocalWidget extends StatelessWidget {
-  String nombre, horario, direccion, tipo;
+  String nombre, direccion, tipo;
+  int tiempoAtencion;
   bool estado;
   LocalWidget(
-      this.nombre, this.direccion, this.horario, this.tipo, this.estado);
+      this.nombre, this.direccion, this.tiempoAtencion, this.tipo, this.estado);
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +91,7 @@ class LocalWidget extends StatelessWidget {
                           top: 65,
                           left: 90,
                           child: Text(
-                            'Horario de Atención: ${horario}',
+                            'Tiempo de Atención (Aprox): ${tiempoAtencion} min.',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 15),
                           ),

@@ -8,108 +8,112 @@ import 'package:provider/provider.dart';
 
 class CreateLocal extends StatelessWidget {
   final TextEditingController nombreC = TextEditingController();
-  final TextEditingController horarioC = TextEditingController();
+  final TextEditingController tiempoAtencionC = TextEditingController();
+  final TextEditingController direccionC = TextEditingController();
+  final TextEditingController tipoC = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
 
     return Scaffold(
-      appBar: AppBar(title: Text("Registrar Local")),
-      drawer: MenuLateral(),
-      body: Center(
-        child: Container(
-          width: 300,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/store.png',
-                  height: 150,
+        appBar: AppBar(title: Text("Registrar Local")),
+        drawer: MenuLateral(),
+        body: ListView(
+          children: [
+            SizedBox(height: 15),
+            Center(
+              child: Container(
+                width: 300,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/store.png',
+                        height: 150,
+                      ),
+                      Text(""),
+                      TextFormField(
+                        controller: nombreC,
+                        validator: (input) {
+                          if (input.isEmpty) {
+                            return 'Nombre del Local';
+                          }
+                        },
+                        decoration:
+                            InputDecoration(labelText: 'Nombre del Local'),
+                      ),
+                      TextFormField(
+                        controller: tiempoAtencionC,
+                        validator: (input) {
+                          if (input.isEmpty) {
+                            return 'Ingrese horario';
+                          }
+                        },
+                        decoration: InputDecoration(
+                            labelText: 'Tiempo de Atención Aprox (min)'),
+                      ),
+                      TextFormField(
+                        controller: tipoC,
+                        validator: (input) {
+                          if (input.isEmpty) {
+                            return 'Nombre del Local';
+                          }
+                        },
+                        decoration: InputDecoration(labelText: 'Tipo'),
+                      ),
+                      TextFormField(
+                        controller: direccionC,
+                        validator: (input) {
+                          if (input.isEmpty) {
+                            return 'Nombre del Local';
+                          }
+                        },
+                        decoration: InputDecoration(labelText: 'Dirección'),
+                      ),
+                      Text("\n\n"),
+                      RaisedButton(
+                          color: Colors.blue,
+                          onPressed: () {
+                            addLocal(
+                                nombreC.text.trim(),
+                                int.parse(tiempoAtencionC.text),
+                                firebaseUser.uid,
+                                direccionC.text.trim(),
+                                tipoC.text.trim());
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AdminPage(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Registrar Local',
+                            style: TextStyle(color: Colors.white, fontSize: 17),
+                          )),
+                    ],
+                  ),
                 ),
-                Text(""),
-                TextFormField(
-                  controller: nombreC,
-                  validator: (input) {
-                    if (input.isEmpty) {
-                      return 'Nombre del Local';
-                    }
-                  },
-                  decoration: InputDecoration(labelText: 'Nombre del Local'),
-                ),
-                TextFormField(
-                  controller: horarioC,
-                  validator: (input) {
-                    if (input.isEmpty) {
-                      return 'Ingrese horario';
-                    }
-                  },
-                  decoration: InputDecoration(labelText: 'Tiempo de Atención'),
-                ),
-                TextFormField(
-                  controller: nombreC,
-                  validator: (input) {
-                    if (input.isEmpty) {
-                      return 'Nombre del Local';
-                    }
-                  },
-                  decoration: InputDecoration(labelText: 'Descripción'),
-                ),
-                TextFormField(
-                  controller: nombreC,
-                  validator: (input) {
-                    if (input.isEmpty) {
-                      return 'Nombre del Local';
-                    }
-                  },
-                  decoration: InputDecoration(labelText: 'Dirección'),
-                ),
-                TextFormField(
-                  controller: nombreC,
-                  validator: (input) {
-                    if (input.isEmpty) {
-                      return 'Nombre del Local';
-                    }
-                  },
-                  decoration: InputDecoration(labelText: 'Telefono o Celular'),
-                ),
-                Text("\n\n"),
-                RaisedButton(
-                    color: Colors.blue,
-                    onPressed: () {
-                      addLocal(nombreC.text.trim(), horarioC.text.trim(),
-                          firebaseUser.uid);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AdminPage(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'Registrar Local',
-                      style: TextStyle(color: Colors.white, fontSize: 17),
-                    )),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          ],
+        ));
   }
 }
 
-addLocal(String nombre, String horario, String uid) {
+addLocal(String nombre, int tiempoAtencion, String uid, String direccion,
+    String tipo) {
   Map<String, dynamic> demoData = {
-    "id": "docRef.$uid",
     "nombre": "$nombre",
-    "horario": "$horario",
+    "tiempoAtencion": tiempoAtencion,
     "uid": "$uid",
-    "tipo": "asd",
+    "tipo": "$tipo",
     "estado": true,
-    "direccion": "asdds"
+    "direccion": "$direccion"
   };
 
   CollectionReference cr = FirebaseFirestore.instance.collection('locales');

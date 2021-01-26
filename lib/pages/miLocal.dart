@@ -83,8 +83,8 @@ class MiLocal extends StatelessWidget {
 getLocal(AsyncSnapshot<QuerySnapshot> snapshot) {
   snapshot.data.docs.map((e) => print(e["nombre"]));
   return snapshot.data.docs
-      .map((doc) => LocalWidget(doc["nombre"], doc["direccion"], doc["horario"],
-          doc["tipo"], doc["estado"]))
+      .map((doc) => LocalWidget(doc["nombre"], doc["direccion"],
+          doc["tiempoAtencion"], doc["tipo"], doc["estado"]))
       .toList();
 }
 
