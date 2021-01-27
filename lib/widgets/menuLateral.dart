@@ -5,9 +5,8 @@ import 'package:colasOnline/main.dart';
 import 'package:colasOnline/pages/admin.dart';
 import 'package:colasOnline/pages/home.dart';
 import 'package:colasOnline/pages/locales.dart';
-import 'package:colasOnline/pages/miLocal.dart';
 import 'package:colasOnline/pages/queue.dart';
-import 'package:colasOnline/pages/signIn.dart';
+import 'package:colasOnline/pages/waiting.dart';
 
 import 'package:colasOnline/services/authentication_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -83,11 +82,10 @@ class MenuLateral extends StatelessWidget {
                 style: TextStyle(color: Colors.red),
               ),
               onTap: () {
-                context.read<AuthenticationService>().signOut();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyApp(),
+                    builder: (context) => Waiting(),
                   ),
                 );
               }),
