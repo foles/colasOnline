@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:colasOnline/pages/locales.dart';
 import 'package:colasOnline/pages/signIn.dart';
 import 'package:colasOnline/services/authentication_service.dart';

@@ -24,7 +24,7 @@ class _QueueState extends State<Queue> {
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
     setState(() {
-      compute(tiempoEspera, firebaseUser.uid);
+      tiempoEspera(firebaseUser.uid);
     });
 
     return Scaffold(
@@ -109,42 +109,47 @@ class _QueueState extends State<Queue> {
   }
 
   tiempoEspera(String uid) async {
-    print("inicio");
-    int nt = 0;
-    int tiempoAtencion = 0;
-    String localId;
-    await FirebaseFirestore.instance
-        .collection('colas')
-        .orderBy('date', descending: false)
-        .get()
-        .then((QuerySnapshot qs) {
-      qs.docs.forEach((element) {
-        print(element.id);
-        if (element['uid'] == uid) {
-          localId = element['localId'];
-          print("---->" + localId);
-          qs.docs.forEach((element2) {
-            print("--->" + element.id);
-            if (element2['localId'] == element['localId']) {
-              nt++;
-            }
-          });
-        }
-      });
-      print("nt");
-
-      print(nt);
-    });
-
-    await FirebaseFirestore.instance
-        .collection('locales')
-        .doc(localId)
-        .get()
-        .then((DocumentSnapshot ds) {
-      tiempoAtencion = ds['tiempoAtencion'];
-      setState(() {
-        tiempoEstimadoEspera = (nt - 1) * tiempoAtencion;
-      });
+    int tiempoEspera = await getTiempoHilos(uid);
+    setState(() {
+      tiempoEstimadoEspera = tiempoEspera;
     });
   }
+}
+
+Future<int> getTiempoHilos(String uid) async {
+  int nt = 0;
+  int tiempoAtencion = 0;
+  String localId;
+  await FirebaseFirestore.instance
+      .collection('colas')
+      .orderBy('date', descending: false)
+      .get()
+      .then((QuerySnapshot qs) {
+    qs.docs.forEach((element) {
+      print(element.id);
+      if (element['uid'] == uid) {
+        localId = element['localId'];
+        print("---->" + localId);
+        qs.docs.forEach((element2) {
+          print("--->" + element.id);
+          if (element2['localId'] == element['localId']) {
+            nt++;
+          }
+        });
+      }
+    });
+    print("nt");
+
+    print(nt);
+  });
+
+  await FirebaseFirestore.instance
+      .collection('locales')
+      .doc(localId)
+      .get()
+      .then((DocumentSnapshot ds) {
+    tiempoAtencion = ds['tiempoAtencion'];
+  });
+
+  return tiempoAtencion * nt;
 }
